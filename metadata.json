@@ -1,0 +1,6 @@
+{
+  "name": "Blockchain Land Registry System",
+  "description": "A tamper-evident, transparent blockchain-based land registry & property ownership system with smart contracts, role-based verifications, transfer logic, and document hash integrity.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
