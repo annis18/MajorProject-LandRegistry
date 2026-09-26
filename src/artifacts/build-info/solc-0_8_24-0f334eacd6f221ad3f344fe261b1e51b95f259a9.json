@@ -1,0 +1,42 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_24-0f334eacd6f221ad3f344fe261b1e51b95f259a9",
+  "solcVersion": "0.8.24",
+  "solcLongVersion": "0.8.24+commit.e11b9ed9",
+  "compilerType": "solc",
+  "userSourceNameMap": {
+    "contracts/LandRegistry.sol": "project/contracts/LandRegistry.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "shanghai",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/LandRegistry.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.24;\r\n\r\ncontract LandRegistry {\r\n    // Stores the address of the person deploying the contract (The Registrar/Gov)\r\n    address public governmentAdmin;\r\n\r\n    // The different stages a property can be in\r\n    enum PropertyStatus { Pending, Verified, Encumbered, Transferred }\r\n\r\n    // Blueprint for a property record\r\n    struct Property {\r\n        string propertyId;\r\n        string location;\r\n        uint256 area;\r\n        address currentOwner;\r\n        string documentHash; // This will hold our IPFS CID (The secure document)\r\n        PropertyStatus status;\r\n    }\r\n\r\n    // A dictionary mapping a unique Property ID to its Property details\r\n    mapping(string => Property) public properties;\r\n    mapping(string => bool) public propertyExists;\r\n\r\n    // Events to notify the React frontend when something happens on-chain\r\n    event PropertyRegistered(string propertyId, address owner, string documentHash);\r\n    event PropertyVerified(string propertyId);\r\n    event OwnershipTransferred(string propertyId, address oldOwner, address newOwner);\r\n    event EncumbranceAdded(string propertyId);\r\n\r\n    // Security: Only the Government Admin can run functions with this modifier\r\n    modifier onlyAdmin() {\r\n        require(msg.sender == governmentAdmin, \"Access Denied: Only Government Admin\");\r\n        _;\r\n    }\r\n\r\n    // Security: Only the actual owner can run functions with this modifier\r\n    modifier onlyOwner(string memory _propertyId) {\r\n        require(msg.sender == properties[_propertyId].currentOwner, \"Access Denied: Not the owner\");\r\n        _;\r\n    }\r\n\r\n    // Runs once when the contract is deployed\r\n    constructor() {\r\n        governmentAdmin = msg.sender;\r\n    }\r\n\r\n    // 1. Government registers a new property\r\n    function registerProperty(\r\n        string memory _propertyId,\r\n        string memory _location,\r\n        uint256 _area,\r\n        address _owner,\r\n        string memory _documentHash\r\n    ) public onlyAdmin {\r\n        require(!propertyExists[_propertyId], \"Error: Property ID already exists\");\r\n\r\n        properties[_propertyId] = Property({\r\n            propertyId: _propertyId,\r\n            location: _location,\r\n            area: _area,\r\n            currentOwner: _owner,\r\n            documentHash: _documentHash,\r\n            status: PropertyStatus.Pending\r\n        });\r\n        propertyExists[_propertyId] = true;\r\n\r\n        emit PropertyRegistered(_propertyId, _owner, _documentHash);\r\n    }\r\n\r\n    // 2. Surveyor verifies the property details\r\n    function verifyProperty(string memory _propertyId) public onlyAdmin {\r\n        require(propertyExists[_propertyId], \"Error: Property does not exist\");\r\n        properties[_propertyId].status = PropertyStatus.Verified;\r\n        emit PropertyVerified(_propertyId);\r\n    }\r\n\r\n    // 3. Notary/Bank adds a loan or legal dispute (freezes transfer)\r\n    function addEncumbrance(string memory _propertyId) public onlyAdmin {\r\n        require(propertyExists[_propertyId], \"Error: Property does not exist\");\r\n        properties[_propertyId].status = PropertyStatus.Encumbered;\r\n        emit EncumbranceAdded(_propertyId);\r\n    }\r\n\r\n    // 4. Owner transfers property to a buyer\r\n    function transferOwnership(string memory _propertyId, address _newOwner) public onlyOwner(_propertyId) {\r\n        require(propertyExists[_propertyId], \"Error: Property does not exist\");\r\n        // Crucial security check: Property cannot have a loan/dispute and must be verified\r\n        require(properties[_propertyId].status == PropertyStatus.Verified, \"Error: Property must be verified and free of encumbrances to transfer\");\r\n        \r\n        address oldOwner = properties[_propertyId].currentOwner;\r\n        properties[_propertyId].currentOwner = _newOwner;\r\n        properties[_propertyId].status = PropertyStatus.Transferred;\r\n\r\n        emit OwnershipTransferred(_propertyId, oldOwner, _newOwner);\r\n    }\r\n\r\n    // 5. Public search function (Read-only, costs zero gas)\r\n    function getProperty(string memory _propertyId) public view returns (\r\n        string memory location,\r\n        uint256 area,\r\n        address owner,\r\n        string memory documentHash,\r\n        PropertyStatus status\r\n    ) {\r\n        require(propertyExists[_propertyId], \"Error: Property not found\");\r\n        Property memory p = properties[_propertyId];\r\n        return (p.location, p.area, p.currentOwner, p.documentHash, p.status);\r\n    }\r\n}"
+      }
+    }
+  }
+}
