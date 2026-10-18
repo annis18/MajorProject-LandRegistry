@@ -4,19 +4,13 @@ import { PropertyType, EncumbranceKind } from '../../types';
 import { shortenAddress, generateSha256 } from '../../utils/crypto';
 import {
   ShieldCheck,
-  Building,
   PlusCircle,
   CheckCircle2,
   Lock,
   Unlock,
   AlertCircle,
-  FileCheck2,
   Users,
-  Sparkles,
   RotateCcw,
-  Clock,
-  ArrowRight,
-  Landmark,
 } from 'lucide-react';
 
 interface AuthorityDashboardProps {
@@ -31,7 +25,6 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
     verifyProperty,
     addEncumbrance,
     releaseEncumbrance,
-    loadSamplePropertyData,
     accounts,
   } = useBlockchain();
 
@@ -41,11 +34,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
     propertyNumber: '',
     surveyNumber: '',
     location: '',
-    state: 'Maharashtra',
-    district: 'Pune',
+    state: 'Uttar Pradesh',
+    district: 'Kanpur Nagar',
     areaSqFt: 3500,
     propertyType: 'RESIDENTIAL' as PropertyType,
-    geoHash: 'tek3v28uq1',
+    geoHash: 'tu4q9z12',
     metadataURI: 'ipfs://bafybeidemo' + Date.now(),
     documentHash: '',
     initialOwnerAddress: accounts[3]?.address || '',
@@ -60,91 +53,86 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
   const [encForm, setEncForm] = useState({
     parcelId: properties[0]?.parcelId || '',
     kind: 'MORTGAGE' as EncumbranceKind,
-    ref: 'BANK-LOAN-SANCTION-REF-4042',
-    details: 'Mortgage loan of ₹1.2 Cr granted for property development',
+    ref: 'HOME-LOAN-REF-4042',
+    details: 'Active Bank Home Loan of ₹45 Lakhs on this plot',
   });
 
-  // Load specific sample presets into registration form
-  const handleLoadSpecificPreset = (type: 'pune' | 'bengaluru' | 'nashik' | 'thane') => {
-    if (type === 'pune') {
+  // Load UP-based sample presets into registration form
+  const handleLoadSpecificPreset = (type: 'kanpur' | 'noida' | 'rooma' | 'lucknow') => {
+    if (type === 'kanpur') {
       setRegForm({
-        parcelId: 'PROP-MH-PUN-005',
-        propertyNumber: 'Plot 78B, Koregaon Park North',
-        surveyNumber: 'CTS-982/2024',
-        location: 'Koregaon Park, Pune, Maharashtra',
-        state: 'Maharashtra',
-        district: 'Pune',
-        areaSqFt: 4200,
+        parcelId: 'PROP-UP-KAN-005',
+        propertyNumber: 'Plot 78B, Swaroop Nagar',
+        surveyNumber: 'Survey-982/2026',
+        location: 'Swaroop Nagar, Kanpur, Uttar Pradesh',
+        state: 'Uttar Pradesh',
+        district: 'Kanpur Nagar',
+        areaSqFt: 3200,
         propertyType: 'RESIDENTIAL',
-        geoHash: 'tek3vc49p1',
-        metadataURI: 'ipfs://bafybeidemo-koregaon-pune',
+        geoHash: 'tu4q9z55',
+        metadataURI: 'ipfs://bafybeidemo-swaroopnagar-kanpur',
         documentHash: '9e2d9b62a4f65c1928374d82f1b0a3c749210e39b4d7f8c12a647d9283f4e190',
-        initialOwnerAddress: accounts[3]?.address || '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        deedURI: 'ipfs://initial-deed-koregaon-official',
-        marketValueEth: 24.5,
+        initialOwnerAddress: accounts[3]?.address || '0x90F79bf6EB2c4f870365E785982E1f101E93b906', // Ayushhh
+        deedURI: 'ipfs://initial-deed-kanpur-official',
+        marketValueEth: 22.5,
       });
-      onNotify('info', 'Preset Loaded: Pune Residential Villa', 'Populated form with Koregaon Park luxury residential parcel.');
-    } else if (type === 'bengaluru') {
+      onNotify('info', 'Preset Loaded: Kanpur Residential Plot', 'Filled form with Swaroop Nagar plot for Ayushhh.');
+    } else if (type === 'noida') {
       setRegForm({
-        parcelId: 'PROP-KA-BLR-008',
-        propertyNumber: 'Tower B, Outer Ring Road Tech Zone',
-        surveyNumber: 'SY-44/1A',
-        location: 'Marathahalli-Sarjapur ORR, Bengaluru',
-        state: 'Karnataka',
-        district: 'Bengaluru Urban',
-        areaSqFt: 18500,
+        parcelId: 'PROP-UP-NOI-008',
+        propertyNumber: 'Tower C, Sector 62 IT Park',
+        surveyNumber: 'Survey-44/1A',
+        location: 'Sector 62, Noida, Uttar Pradesh',
+        state: 'Uttar Pradesh',
+        district: 'Gautam Buddha Nagar',
+        areaSqFt: 12500,
         propertyType: 'COMMERCIAL',
-        geoHash: 'tdr1vg89x2',
-        metadataURI: 'ipfs://bafybeidemo-techpark-blr',
+        geoHash: 'ttpg4c99',
+        metadataURI: 'ipfs://bafybeidemo-techpark-noida',
         documentHash: '3a1f8b90c1e842367d5e4b99810a9c77610e2410a8b9c1d044ef1a01c45d3e89',
-        initialOwnerAddress: accounts[4]?.address || '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-        deedURI: 'ipfs://initial-deed-techpark-official',
-        marketValueEth: 120.0,
-      });
-      onNotify('info', 'Preset Loaded: Bengaluru Tech Park', 'Populated form with commercial IT park parcel.');
-    } else if (type === 'nashik') {
-      setRegForm({
-        parcelId: 'PROP-MH-NSK-012',
-        propertyNumber: 'Gat No. 142/2, Dindori Vineyard',
-        surveyNumber: 'GAT-142/2',
-        location: 'Dindori Taluka, Nashik',
-        state: 'Maharashtra',
-        district: 'Nashik',
-        areaSqFt: 87120,
-        propertyType: 'AGRICULTURAL',
-        geoHash: 'teq4va11y3',
-        metadataURI: 'ipfs://bafybeidemo-vineyard-nashik',
-        documentHash: 'b5c2d89f01e74928374d82f1b0a3c749210e39b4d7f8c12a647d9283f4e190a1',
-        initialOwnerAddress: accounts[3]?.address || '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-        deedURI: 'ipfs://initial-deed-vineyard-official',
-        marketValueEth: 14.0,
-      });
-      onNotify('info', 'Preset Loaded: Nashik Farmland', 'Populated form with 2-acre agricultural vineyard parcel.');
-    } else {
-      setRegForm({
-        parcelId: 'PROP-MH-THN-019',
-        propertyNumber: 'Shed 12, MIDC Logistics Hub',
-        surveyNumber: 'MIDC-IND-409/B',
-        location: 'Bhiwandi-Thane Logistics Corridor',
-        state: 'Maharashtra',
-        district: 'Thane',
-        areaSqFt: 32000,
-        propertyType: 'INDUSTRIAL',
-        geoHash: 'te7ufq10a9',
-        metadataURI: 'ipfs://bafybeidemo-midc-thane',
-        documentHash: '6f8a02c91b3e45d67890abcdef1234567890abcdef1234567890abcdef123456',
-        initialOwnerAddress: accounts[4]?.address || '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-        deedURI: 'ipfs://initial-deed-midc-official',
+        initialOwnerAddress: accounts[4]?.address || '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65', // Kartikey
+        deedURI: 'ipfs://initial-deed-noida-official',
         marketValueEth: 65.0,
       });
-      onNotify('info', 'Preset Loaded: Thane Industrial Hub', 'Populated form with industrial warehouse parcel.');
+      onNotify('info', 'Preset Loaded: Noida Sector 62 Commercial', 'Filled form with Noida IT Park plot for Kartikey.');
+    } else if (type === 'rooma') {
+      setRegForm({
+        parcelId: 'PROP-UP-KAN-012',
+        propertyNumber: 'Khasra No. 142, Rooma Highway',
+        surveyNumber: 'Khasra-142/2',
+        location: 'Rooma, Kanpur Nagar, Uttar Pradesh',
+        state: 'Uttar Pradesh',
+        district: 'Kanpur Nagar',
+        areaSqFt: 25000,
+        propertyType: 'AGRICULTURAL',
+        geoHash: 'tu4q8x22',
+        metadataURI: 'ipfs://bafybeidemo-rooma-farmland',
+        documentHash: 'b5c2d89f01e74928374d82f1b0a3c749210e39b4d7f8c12a647d9283f4e190a1',
+        initialOwnerAddress: accounts[3]?.address || '0x90F79bf6EB2c4f870365E785982E1f101E93b906', // Ayushhh
+        deedURI: 'ipfs://initial-deed-rooma-official',
+        marketValueEth: 14.0,
+      });
+      onNotify('info', 'Preset Loaded: Kanpur Farmland', 'Filled form with agricultural plot in Rooma.');
+    } else {
+      setRegForm({
+        parcelId: 'PROP-UP-LKO-019',
+        propertyNumber: 'Plot 12, Amausi Industrial Area',
+        surveyNumber: 'IND-409/B',
+        location: 'Amausi Industrial Area, Lucknow',
+        state: 'Uttar Pradesh',
+        district: 'Lucknow',
+        areaSqFt: 18000,
+        propertyType: 'INDUSTRIAL',
+        geoHash: 'tu69y711',
+        metadataURI: 'ipfs://bafybeidemo-lucknow-industrial',
+        documentHash: '6f8a02c91b3e45d67890abcdef1234567890abcdef1234567890abcdef123456',
+        initialOwnerAddress: accounts[4]?.address || '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65', // Kartikey
+        deedURI: 'ipfs://initial-deed-lucknow-official',
+        marketValueEth: 40.0,
+      });
+      onNotify('info', 'Preset Loaded: Lucknow Industrial Plot', 'Filled form with industrial warehouse plot in Lucknow.');
     }
     setFormError(null);
-  };
-
-  // Load sample data into registration form
-  const handleLoadSample = () => {
-    handleLoadSpecificPreset('pune');
   };
 
   const handleClear = () => {
@@ -153,8 +141,8 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
       propertyNumber: '',
       surveyNumber: '',
       location: '',
-      state: 'Maharashtra',
-      district: 'Pune',
+      state: 'Uttar Pradesh',
+      district: 'Kanpur Nagar',
       areaSqFt: 0,
       propertyType: 'RESIDENTIAL',
       geoHash: '',
@@ -170,7 +158,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
   // Auto-generate SHA-256 hash if empty
   const handleGenerateHash = async () => {
     if (!regForm.parcelId || !regForm.propertyNumber) {
-      setFormError('Please enter Property ID and Property Number first.');
+      setFormError('Please enter Property ID and Plot Number first.');
       return;
     }
     const sampleDeedContent = JSON.stringify({
@@ -192,22 +180,22 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
     setFormError(null);
 
     if (!regForm.parcelId.trim()) {
-      setFormError('Please enter a valid unique Parcel ID (e.g. PROP-MH-PUN-005).');
+      setFormError('Please enter a valid unique Property ID (e.g. PROP-UP-KAN-005).');
       return;
     }
 
     if (!regForm.propertyNumber.trim()) {
-      setFormError('Please enter the Physical Property CTS/Plot Number.');
+      setFormError('Please enter the Plot / House Number.');
       return;
     }
 
     if (!regForm.initialOwnerAddress.trim() || !regForm.initialOwnerAddress.startsWith('0x')) {
-      setFormError('Please enter a valid Ethereum wallet address for the Initial Owner.');
+      setFormError('Please enter a valid wallet address (starting with 0x) for the Owner.');
       return;
     }
 
     if (Number(regForm.areaSqFt) <= 0) {
-      setFormError('Property Area must be a positive number greater than 0.');
+      setFormError('Property Area must be greater than 0.');
       return;
     }
 
@@ -231,11 +219,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
     setIsSubmitting(false);
 
     if (result.success) {
-      onNotify('success', 'Parcel Registered On-Chain', result.message, result.txHash);
+      onNotify('success', 'Property Registered On-Chain', result.message, result.txHash);
       handleClear();
     } else {
       setFormError(result.message);
-      onNotify('error', 'Registration Reverted', result.message);
+      onNotify('error', 'Registration Failed', result.message);
     }
   };
 
@@ -253,7 +241,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
   const handleAddEncumbrance = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!encForm.parcelId) {
-      onNotify('error', 'Validation Error', 'Please select a property parcel.');
+      onNotify('error', 'Validation Error', 'Please select a property.');
       return;
     }
     const result = await addEncumbrance({
@@ -264,9 +252,9 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
     });
 
     if (result.success) {
-      onNotify('success', 'Encumbrance Recorded', result.message, result.txHash);
+      onNotify('success', 'Loan / Lock Recorded', result.message, result.txHash);
     } else {
-      onNotify('error', 'Encumbrance Failed', result.message);
+      onNotify('error', 'Action Failed', result.message);
     }
   };
 
@@ -274,7 +262,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
   const handleReleaseEnc = async (parcelId: string, encId: string) => {
     const result = await releaseEncumbrance(parcelId, encId);
     if (result.success) {
-      onNotify('success', 'Lien Released', result.message, result.txHash);
+      onNotify('success', 'Loan Lock Released', result.message, result.txHash);
     } else {
       onNotify('error', 'Release Failed', result.message);
     }
@@ -300,7 +288,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
         <ShieldCheck className={`w-5 h-5 mt-0.5 shrink-0 ${isRegistrarOrAdmin ? 'text-[#0ca678]' : 'text-[#f59f00]'}`} />
         <div>
           <h3 className="text-sm font-bold text-[#1a1a1a]">
-            Active Identity: {currentAccount.name} ({currentAccount.roleLabel})
+            Active User: {currentAccount.name} ({currentAccount.roleLabel})
           </h3>
           <p className="text-xs text-[#6c757d] mt-0.5">
             Wallet:{' '}
@@ -308,11 +296,10 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
           </p>
           {!isRegistrarOrAdmin && (
             <p className="text-xs text-[#f59f00] mt-1 font-semibold">
-              Notice: You are currently simulating a non-registrar account. Registration transactions will revert with{' '}
+              Note: Only the Registrar (Animesh) can register new properties. If you try with this account, the smart contract will reject it with{' '}
               <code className="bg-[#fff9db] px-1.5 py-0.5 rounded text-[#e03131] font-mono border border-[#ffec99]">
                 "Not authorized registrar"
-              </code>{' '}
-              unless you switch to the District Land Registrar in the top header.
+              </code>.
             </p>
           )}
         </div>
@@ -326,42 +313,42 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
               <span className="text-xs font-mono font-bold text-[#0ca678] bg-[#e6fcf5] px-2 py-0.5 rounded border border-[#b2f2bb]">
                 STEP 1
               </span>
-              <h2 className="text-base font-bold text-[#1a1a1a] tracking-tight">Register New Land Parcel</h2>
+              <h2 className="text-base font-bold text-[#1a1a1a] tracking-tight">Register New Property Plot</h2>
             </div>
             <p className="text-xs text-[#6c757d] mt-0.5 font-medium">
-              Record physical parcel boundaries, survey cadastral numbers, and initial owner on the immutable ledger.
+              Add a new land plot with its location, area, owner wallet, and document hash to the blockchain.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-bold text-[#6c757d] mr-1">Quick Sample Presets:</span>
+            <span className="text-[11px] font-bold text-[#6c757d] mr-1">Sample UP Plots:</span>
             <button
               type="button"
-              onClick={() => handleLoadSpecificPreset('pune')}
+              onClick={() => handleLoadSpecificPreset('kanpur')}
               className="px-2.5 py-1 rounded-md bg-[#f8f9fa] hover:bg-[#e9ecef] text-[#1a1a1a] border border-[#ced4da] text-[11px] font-bold transition-colors"
             >
-              🏡 Pune Villa
+              🏡 Kanpur Plot
             </button>
             <button
               type="button"
-              onClick={() => handleLoadSpecificPreset('bengaluru')}
+              onClick={() => handleLoadSpecificPreset('noida')}
               className="px-2.5 py-1 rounded-md bg-[#f8f9fa] hover:bg-[#e9ecef] text-[#1a1a1a] border border-[#ced4da] text-[11px] font-bold transition-colors"
             >
-              🏢 BLR Tech Park
+              🏢 Noida Sec-62
             </button>
             <button
               type="button"
-              onClick={() => handleLoadSpecificPreset('nashik')}
+              onClick={() => handleLoadSpecificPreset('rooma')}
               className="px-2.5 py-1 rounded-md bg-[#f8f9fa] hover:bg-[#e9ecef] text-[#1a1a1a] border border-[#ced4da] text-[11px] font-bold transition-colors"
             >
-              🌾 Nashik Farm
+              🌾 Rooma Farm
             </button>
             <button
               type="button"
-              onClick={() => handleLoadSpecificPreset('thane')}
+              onClick={() => handleLoadSpecificPreset('lucknow')}
               className="px-2.5 py-1 rounded-md bg-[#f8f9fa] hover:bg-[#e9ecef] text-[#1a1a1a] border border-[#ced4da] text-[11px] font-bold transition-colors"
             >
-              🏭 Thane Logistics
+              🏭 Lucknow Hub
             </button>
             <button
               type="button"
@@ -386,11 +373,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Unique Parcel ID <span className="text-[#e03131]">*</span>
+                Unique Property ID <span className="text-[#e03131]">*</span>
               </label>
               <input
                 type="text"
-                placeholder="e.g. PROP-MH-PUN-005"
+                placeholder="e.g. PROP-UP-KAN-005"
                 value={regForm.parcelId}
                 onChange={e => setRegForm({ ...regForm, parcelId: e.target.value })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a] font-mono"
@@ -400,11 +387,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Property CTS / Plot Number <span className="text-[#e03131]">*</span>
+                Plot / House Number <span className="text-[#e03131]">*</span>
               </label>
               <input
                 type="text"
-                placeholder="e.g. CTS-Plot-98/1A"
+                placeholder="e.g. Plot-78B"
                 value={regForm.propertyNumber}
                 onChange={e => setRegForm({ ...regForm, propertyNumber: e.target.value })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a]"
@@ -414,11 +401,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Cadastral Survey Number <span className="text-[#e03131]">*</span>
+                Survey / Khasra Number <span className="text-[#e03131]">*</span>
               </label>
               <input
                 type="text"
-                placeholder="e.g. Survey 84, Hissa 3"
+                placeholder="e.g. Survey 84, Block B"
                 value={regForm.surveyNumber}
                 onChange={e => setRegForm({ ...regForm, surveyNumber: e.target.value })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a]"
@@ -432,7 +419,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
               </label>
               <input
                 type="text"
-                placeholder="e.g. Aundh Road, Pune, Maharashtra 411007"
+                placeholder="e.g. Swaroop Nagar, Kanpur, Uttar Pradesh"
                 value={regForm.location}
                 onChange={e => setRegForm({ ...regForm, location: e.target.value })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a]"
@@ -463,7 +450,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
               </label>
               <input
                 type="number"
-                placeholder="e.g. 3600"
+                placeholder="e.g. 3200"
                 value={regForm.areaSqFt || ''}
                 onChange={e => setRegForm({ ...regForm, areaSqFt: Number(e.target.value) })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a]"
@@ -473,11 +460,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                GIS Geohash Reference
+                Map Grid Code (Geohash)
               </label>
               <input
                 type="text"
-                placeholder="e.g. tek3v28uq1"
+                placeholder="e.g. tu4q9z12"
                 value={regForm.geoHash}
                 onChange={e => setRegForm({ ...regForm, geoHash: e.target.value })}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a] font-mono"
@@ -486,7 +473,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Initial Owner Wallet Address <span className="text-[#e03131]">*</span>
+                Owner Wallet Address <span className="text-[#e03131]">*</span>
               </label>
               <input
                 type="text"
@@ -501,14 +488,14 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
             <div className="sm:col-span-2">
               <div className="flex items-center justify-between mb-1">
                 <label className="text-xs font-bold text-[#495057]">
-                  Cryptographic Document SHA-256 Hash <span className="text-[#e03131]">*</span>
+                  Document SHA-256 Hash (Digital Fingerprint) <span className="text-[#e03131]">*</span>
                 </label>
                 <button
                   type="button"
                   onClick={handleGenerateHash}
                   className="text-[11px] text-[#1971c2] hover:underline font-bold"
                 >
-                  Generate SHA-256 Hash
+                  Auto-Generate Hash
                 </button>
               </div>
               <input
@@ -523,7 +510,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Initial Deed IPFS URI
+                Off-Chain Document Link (IPFS)
               </label>
               <input
                 type="text"
@@ -542,13 +529,13 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
               className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#1a1a1a] hover:bg-[#2d3436] text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>{isSubmitting ? 'Recording on Blockchain...' : 'REGISTER PARCEL ON BLOCKCHAIN'}</span>
+              <span>{isSubmitting ? 'Saving to Blockchain...' : 'REGISTER PROPERTY ON BLOCKCHAIN'}</span>
             </button>
           </div>
         </form>
       </div>
 
-      {/* SECTION B: Cadastral Survey & Title Verification Queue */}
+      {/* SECTION B: Pending Surveyor Verification Queue */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <div className="border-b border-[#e9ecef] pb-4 mb-5">
           <div className="flex items-center gap-2">
@@ -556,11 +543,11 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
               STEP 2
             </span>
             <h2 className="text-base font-bold text-[#1a1a1a] tracking-tight">
-              Cadastral Verification Queue ({unverifiedParcels.length})
+              Pending Surveyor Verification ({unverifiedParcels.length})
             </h2>
           </div>
           <p className="text-xs text-[#6c757d] mt-0.5 font-medium">
-            Cadastral Surveyors and Registrars review physical ground-truth measurements and approve on-chain title verification.
+            The Land Surveyor (Harsh) or Registrar (Animesh) verifies physical boundaries before a property can be sold.
           </p>
         </div>
 
@@ -568,7 +555,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
           <div className="p-6 rounded-xl bg-[#f8f9fa] text-center border border-[#e9ecef]">
             <CheckCircle2 className="w-8 h-8 text-[#0ca678] mx-auto mb-2" />
             <p className="text-sm font-bold text-[#1a1a1a]">All Registered Properties Are Verified</p>
-            <p className="text-xs text-[#6c757d] mt-0.5 font-medium">No pending inspection requests in queue.</p>
+            <p className="text-xs text-[#6c757d] mt-0.5 font-medium">No pending properties waiting for inspection.</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -595,7 +582,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
                     className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#1971c2] hover:bg-[#1864ab] text-white text-xs font-bold transition-colors shadow-xs"
                   >
                     <ShieldCheck className="w-4 h-4" />
-                    <span>VERIFY PARCEL</span>
+                    <span>APPROVE & VERIFY</span>
                   </button>
                 </div>
               </div>
@@ -604,19 +591,19 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
         )}
       </div>
 
-      {/* SECTION C: Notary & Bank Lien (Encumbrance) Management */}
+      {/* SECTION C: Bank Loans & Legal Locks */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <div className="border-b border-[#e9ecef] pb-4 mb-5">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono font-bold text-[#ae3ec9] bg-[#f3d9fa] px-2 py-0.5 rounded border border-[#eebefa]">
-              LEGAL NOTARY
+              BANK & LEGAL OFFICER
             </span>
             <h2 className="text-base font-bold text-[#1a1a1a] tracking-tight">
-              Encumbrances, Mortgages & Lien Clearance
+              Bank Loans & Legal Locks (Encumbrances)
             </h2>
           </div>
           <p className="text-xs text-[#6c757d] mt-0.5 font-medium">
-            Legal notaries and banks record mortgages or court stay orders. Active liens block smart contract title mutations.
+            The Bank / Legal Officer (Divyanshh) can attach an active loan or dispute lock. Locked properties cannot be transferred until cleared.
           </p>
         </div>
 
@@ -624,12 +611,12 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
         <form onSubmit={handleAddEncumbrance} className="p-4 bg-[#f8f9fa] rounded-xl border border-[#e9ecef] mb-6">
           <h4 className="text-xs font-bold text-[#1a1a1a] uppercase tracking-wider mb-3 flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-[#e03131]" />
-            <span>Record New Mortgage / Encumbrance</span>
+            <span>Attach Bank Loan or Legal Lock</span>
           </h4>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#495057] mb-1">Target Property Parcel</label>
+              <label className="block text-xs font-bold text-[#495057] mb-1">Select Property</label>
               <select
                 value={encForm.parcelId}
                 onChange={e => setEncForm({ ...encForm, parcelId: e.target.value })}
@@ -644,21 +631,21 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#495057] mb-1">Encumbrance Type</label>
+              <label className="block text-xs font-bold text-[#495057] mb-1">Lock Reason / Type</label>
               <select
                 value={encForm.kind}
                 onChange={e => setEncForm({ ...encForm, kind: e.target.value as EncumbranceKind })}
                 className="w-full bg-white border border-[#ced4da] rounded-lg px-3 py-2 text-xs text-[#1a1a1a] focus:outline-none focus:border-[#1a1a1a]"
               >
-                <option value="MORTGAGE">MORTGAGE (Bank Loan)</option>
-                <option value="COURT_ORDER">COURT_ORDER (Litigation Stay)</option>
-                <option value="TAX_LIEN">TAX_LIEN (Revenue Department)</option>
-                <option value="BANK_LIEN">BANK_LIEN (Corporate Guarantee)</option>
+                <option value="MORTGAGE">MORTGAGE (Active Home Loan)</option>
+                <option value="COURT_ORDER">COURT_ORDER (Legal Dispute Stay)</option>
+                <option value="TAX_LIEN">TAX_LIEN (Pending Property Tax)</option>
+                <option value="BANK_LIEN">BANK_LIEN (Business Loan Guarantee)</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#495057] mb-1">Legal Reference No.</label>
+              <label className="block text-xs font-bold text-[#495057] mb-1">Reference Number</label>
               <input
                 type="text"
                 value={encForm.ref}
@@ -668,7 +655,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-bold text-[#495057] mb-1">Lien Particulars / Loan Details</label>
+              <label className="block text-xs font-bold text-[#495057] mb-1">Loan / Lock Details</label>
               <input
                 type="text"
                 value={encForm.details}
@@ -682,7 +669,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
                 type="submit"
                 className="w-full py-2 px-4 rounded-lg bg-[#1a1a1a] hover:bg-[#2d3436] text-white text-xs font-bold transition-colors shadow-xs"
               >
-                RECORD LIEN ON-CHAIN
+                LOCK PROPERTY ON-CHAIN
               </button>
             </div>
           </div>
@@ -691,12 +678,12 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
         {/* Active Encumbrances List */}
         <div>
           <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider mb-3">
-            Currently Encumbered Properties ({encumberedParcels.length})
+            Currently Locked Properties ({encumberedParcels.length})
           </h4>
 
           {encumberedParcels.length === 0 ? (
             <div className="p-4 rounded-xl bg-[#f8f9fa] text-xs text-[#6c757d] text-center border border-[#e9ecef] font-medium">
-              No active mortgages or legal liens in the registry.
+              No active bank loans or locks on any property.
             </div>
           ) : (
             <div className="space-y-2">
@@ -723,7 +710,7 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
                         className="flex items-center gap-1 px-3 py-1 rounded bg-[#e6fcf5] hover:bg-[#b2f2bb] text-[#0ca678] border border-[#b2f2bb] font-bold transition-colors shrink-0"
                       >
                         <Unlock className="w-3 h-3" />
-                        <span>RELEASE LIEN</span>
+                        <span>CLEAR LOAN & UNLOCK</span>
                       </button>
                     </div>
                   ))}
@@ -734,59 +721,59 @@ export const AuthorityDashboardTab: React.FC<AuthorityDashboardProps> = ({ onNot
         </div>
       </div>
 
-      {/* SECTION D: Role Permissions & Governance Matrix (PDF Section 5) */}
+      {/* SECTION D: Role Permissions Table */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <h3 className="text-sm font-bold text-[#1a1a1a] uppercase tracking-wider mb-4 flex items-center gap-2">
           <Users className="w-4 h-4 text-[#0ca678]" />
-          <span>Role Permissions Matrix (Smart Contract Access Control)</span>
+          <span>Team Role Permissions (Who Can Do What)</span>
         </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-[#e9ecef] text-[#6c757d] bg-[#f8f9fa]">
-                <th className="py-2.5 px-3 font-bold">Actor / Role</th>
-                <th className="py-2.5 px-3 font-bold">Register Parcel</th>
-                <th className="py-2.5 px-3 font-bold">Verify Record</th>
-                <th className="py-2.5 px-3 font-bold">Attach / Clear Lien</th>
-                <th className="py-2.5 px-3 font-bold">Transfer Title</th>
+                <th className="py-2.5 px-3 font-bold">Role & Team Member</th>
+                <th className="py-2.5 px-3 font-bold">Register Plot</th>
+                <th className="py-2.5 px-3 font-bold">Verify Plot</th>
+                <th className="py-2.5 px-3 font-bold">Lock / Unlock Loan</th>
+                <th className="py-2.5 px-3 font-bold">Transfer Ownership</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[#e9ecef] font-mono text-[11px]">
               <tr>
-                <td className="py-2.5 px-3 font-bold text-[#0ca678]">ADMIN / REGISTRAR</td>
-                <td className="py-2.5 px-3 text-[#0ca678] font-bold">✓ YES (registerParcel)</td>
-                <td className="py-2.5 px-3 text-[#0ca678] font-bold">✓ YES (verifyProperty)</td>
+                <td className="py-2.5 px-3 font-bold text-[#0ca678]">REGISTRAR (Animesh)</td>
                 <td className="py-2.5 px-3 text-[#0ca678] font-bold">✓ YES</td>
-                <td className="py-2.5 px-3 text-[#adb5bd]">✗ No (Only if owner/notary)</td>
+                <td className="py-2.5 px-3 text-[#0ca678] font-bold">✓ YES</td>
+                <td className="py-2.5 px-3 text-[#0ca678] font-bold">✓ YES</td>
+                <td className="py-2.5 px-3 text-[#adb5bd]">✗ No (Only Owner)</td>
               </tr>
               <tr>
-                <td className="py-2.5 px-3 font-bold text-[#1971c2]">CADASTRAL SURVEYOR</td>
+                <td className="py-2.5 px-3 font-bold text-[#1971c2]">SURVEYOR (Harsh)</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
-                <td className="py-2.5 px-3 text-[#1971c2] font-bold">✓ YES (verifyProperty)</td>
+                <td className="py-2.5 px-3 text-[#1971c2] font-bold">✓ YES</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
               </tr>
               <tr>
-                <td className="py-2.5 px-3 font-bold text-[#ae3ec9]">LEGAL NOTARY</td>
+                <td className="py-2.5 px-3 font-bold text-[#ae3ec9]">BANK OFFICER (Divyanshh)</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
-                <td className="py-2.5 px-3 text-[#ae3ec9] font-bold">✓ YES (add/releaseEncumbrance)</td>
-                <td className="py-2.5 px-3 text-[#ae3ec9] font-bold">✓ YES (Authorizes mutation)</td>
+                <td className="py-2.5 px-3 text-[#ae3ec9] font-bold">✓ YES</td>
+                <td className="py-2.5 px-3 text-[#ae3ec9] font-bold">✓ YES (Legal Sign-off)</td>
               </tr>
               <tr>
-                <td className="py-2.5 px-3 font-bold text-[#f59f00]">PROPERTY OWNER (Citizen)</td>
+                <td className="py-2.5 px-3 font-bold text-[#f59f00]">OWNER / CITIZEN (Ayushhh & Kartikey)</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
                 <td className="py-2.5 px-3 text-[#adb5bd]">✗ No</td>
-                <td className="py-2.5 px-3 text-[#f59f00] font-bold">✓ YES (transferTitle - owned only)</td>
+                <td className="py-2.5 px-3 text-[#f59f00] font-bold">✓ YES (Own plots only)</td>
               </tr>
               <tr>
-                <td className="py-2.5 px-3 font-bold text-[#e03131]">UNAUTHORIZED CALLER</td>
-                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ REVERTS ("Not registrar")</td>
-                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ REVERTS ("Unauthorized")</td>
-                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ REVERTS ("Not notary")</td>
-                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ REVERTS ("Not owner")</td>
+                <td className="py-2.5 px-3 font-bold text-[#e03131]">UNKNOWN WALLET</td>
+                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ BLOCKED</td>
+                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ BLOCKED</td>
+                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ BLOCKED</td>
+                <td className="py-2.5 px-3 text-[#e03131] font-bold">✗ BLOCKED</td>
               </tr>
             </tbody>
           </table>

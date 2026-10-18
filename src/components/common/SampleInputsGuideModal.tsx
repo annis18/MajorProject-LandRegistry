@@ -3,13 +3,6 @@ import {
   TestTube2,
   Copy,
   Check,
-  Building,
-  ShieldCheck,
-  ArrowRightLeft,
-  Fingerprint,
-  Cpu,
-  Lock,
-  ExternalLink,
   ChevronRight,
   Sparkles,
   Info,
@@ -42,62 +35,59 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'authority-reg',
       tabId: 'authority',
       category: 'authority',
-      title: '1. Land Authority: Parcel Registration Inputs',
-      description: 'Test smart contract parcel initialization (registerParcel). Requires Land Authority account.',
-      roleNeeded: 'Land Authority (0xf39F...2266)',
+      title: '1. Registrar (Animesh): Register New Property Inputs',
+      description: 'Test adding a new land plot to the smart contract. Requires the Registrar account.',
+      roleNeeded: 'Animesh - Registrar (0xf39F...2266)',
       presets: [
         {
-          name: 'Preset A: Residential Villa (Pune)',
+          name: 'Preset A: Residential Plot (Kanpur)',
           inputs: {
-            'Parcel ID': 'PROP-MH-PUN-005',
-            'Property / Plot No': 'Plot 78B, Koregaon Park North',
-            'Survey / CTS No': 'CTS-982/2024',
-            'Location': 'Koregaon Park, Pune, Maharashtra',
-            'State': 'Maharashtra',
-            'District': 'Pune',
-            'Area (Sq. Ft.)': '4200',
+            'Property ID': 'PROP-UP-KAN-005',
+            'Plot / House No': 'Plot 78B, Swaroop Nagar',
+            'Survey / Khasra No': 'Survey-982/2026',
+            'Location': 'Swaroop Nagar, Kanpur, Uttar Pradesh',
+            'State': 'Uttar Pradesh',
+            'District': 'Kanpur Nagar',
+            'Area (Sq. Ft.)': '3200',
             'Property Type': 'RESIDENTIAL',
-            'GeoHash': 'tek3vc49p1',
+            'GeoHash': 'tu4q9z55',
             'Document SHA-256': '9e2d9b62a4f65c1928374d82f1b0a3c749210e39b4d7f8c12a647d9283f4e190',
-            'Initial Owner Address': '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-            'Deed IPFS URI': 'ipfs://bafybeidemo-koregaon-deed',
-            'Market Value (ETH)': '24.5',
+            'Owner Wallet (Ayushhh)': '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
+            'Deed IPFS Link': 'ipfs://initial-deed-kanpur-official',
           },
         },
         {
-          name: 'Preset B: Commercial Tech Park (Bengaluru)',
+          name: 'Preset B: Commercial IT Plot (Noida Sector 62)',
           inputs: {
-            'Parcel ID': 'PROP-KA-BLR-008',
-            'Property / Plot No': 'Tower B, Outer Ring Road Tech Zone',
-            'Survey / CTS No': 'SY-44/1A',
-            'Location': 'Marathahalli-Sarjapur ORR, Bengaluru',
-            'State': 'Karnataka',
-            'District': 'Bengaluru Urban',
-            'Area (Sq. Ft.)': '18500',
+            'Property ID': 'PROP-UP-NOI-008',
+            'Plot / House No': 'Tower C, Sector 62 IT Park',
+            'Survey / Khasra No': 'Survey-44/1A',
+            'Location': 'Sector 62, Noida, Uttar Pradesh',
+            'State': 'Uttar Pradesh',
+            'District': 'Gautam Buddha Nagar',
+            'Area (Sq. Ft.)': '12500',
             'Property Type': 'COMMERCIAL',
-            'GeoHash': 'tdr1vg89x2',
+            'GeoHash': 'ttpg4c99',
             'Document SHA-256': '3a1f8b90c1e842367d5e4b99810a9c77610e2410a8b9c1d044ef1a01c45d3e89',
-            'Initial Owner Address': '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-            'Deed IPFS URI': 'ipfs://bafybeitechpark-comm-deed',
-            'Market Value (ETH)': '120.0',
+            'Owner Wallet (Kartikey)': '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65',
+            'Deed IPFS Link': 'ipfs://initial-deed-noida-official',
           },
         },
         {
-          name: 'Preset C: Agricultural Farmland (Nashik)',
+          name: 'Preset C: Farmland Plot (Rooma, Kanpur)',
           inputs: {
-            'Parcel ID': 'PROP-MH-NSK-012',
-            'Property / Plot No': 'Gat No. 142/2, Dindori Vineyard',
-            'Survey / CTS No': 'GAT-142/2',
-            'Location': 'Dindori Taluka, Nashik',
-            'State': 'Maharashtra',
-            'District': 'Nashik',
-            'Area (Sq. Ft.)': '87120',
+            'Property ID': 'PROP-UP-KAN-012',
+            'Plot / House No': 'Khasra No. 142, Rooma Highway',
+            'Survey / Khasra No': 'Khasra-142/2',
+            'Location': 'Rooma, Kanpur Nagar, Uttar Pradesh',
+            'State': 'Uttar Pradesh',
+            'District': 'Kanpur Nagar',
+            'Area (Sq. Ft.)': '25000',
             'Property Type': 'AGRICULTURAL',
-            'GeoHash': 'teq4va11y3',
+            'GeoHash': 'tu4q8x22',
             'Document SHA-256': 'b5c2d89f01e74928374d82f1b0a3c749210e39b4d7f8c12a647d9283f4e190a1',
-            'Initial Owner Address': '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
-            'Deed IPFS URI': 'ipfs://bafybeifarm-nashik-deed',
-            'Market Value (ETH)': '14.0',
+            'Owner Wallet (Ayushhh)': '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
+            'Deed IPFS Link': 'ipfs://initial-deed-rooma-official',
           },
         },
       ],
@@ -106,17 +96,17 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'authority-survey',
       tabId: 'authority',
       category: 'authority',
-      title: '2. Cadastral Surveyor: Physical Boundary Verification',
-      description: 'Execute verifyProperty(parcelId) to validate ground physical bounds and enable title transfers.',
-      roleNeeded: 'Cadastral Surveyor (0x90F7...b906)',
+      title: '2. Land Surveyor (Harsh): Verify Property Boundaries',
+      description: 'Approve physical boundaries of a registered plot so the owner is allowed to sell/transfer it.',
+      roleNeeded: 'Harsh - Surveyor (0x7099...79C8)',
       presets: [
         {
-          name: 'Verification Target Sample',
+          name: 'Sample Unverified Plot to Approve',
           inputs: {
-            'Target Parcel to Verify': 'PROP-MH-PUN-004',
-            'Current State': 'Pending Verification (Transfer locked)',
-            'Action': 'Switch wallet to Cadastral Surveyor -> Scroll to Surveyor Verification Queue -> Click Verify Survey & Bounds',
-            'Expected Result': 'Status flips to VERIFIED on blockchain, emitting PropertyVerified event.',
+            'Property to Verify': 'PROP-UP-KAN-003 (Near Axis Colleges, Rooma, Kanpur)',
+            'Current Status': 'REGISTERED (Unverified - Transfer Blocked)',
+            'Steps': 'Switch account to Harsh (Surveyor) -> Open Authority Portal -> Click "Approve & Verify"',
+            'Expected Result': 'Status changes to VERIFIED on the blockchain.',
           },
         },
       ],
@@ -125,35 +115,26 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'authority-encumbrance',
       tabId: 'authority',
       category: 'authority',
-      title: '3. Legal Notary / Bank: Encumbrance Management',
-      description: 'Execute addEncumbrance to lock transfers during active bank loan, or releaseEncumbrance to clear titles.',
-      roleNeeded: 'Legal Notary / Bank (0x15d3...6A65)',
+      title: '3. Bank & Legal Officer (Divyanshh): Loan Locks',
+      description: 'Lock a property if it has an active bank loan, or unlock it once the loan is paid off.',
+      roleNeeded: 'Divyanshh - Bank Officer (0x3C44...93BC)',
       presets: [
         {
-          name: 'Sample 1: Add Bank Home Loan Mortgage',
+          name: 'Sample 1: Attach Bank Home Loan Lock',
           inputs: {
-            'Target Parcel ID': 'PROP-MH-PUN-001',
-            'Encumbrance Kind': 'MORTGAGE',
-            'Bank Sanction Reference': 'SBI-HOMELOAN-PUN-2024-8841',
-            'Claim Description': 'Home improvement loan of ₹85,00,000 sanctioned with registered title deposit.',
+            'Target Property ID': 'PROP-UP-KAN-001',
+            'Lock Type': 'MORTGAGE',
+            'Reference Number': 'SBI-HOMELOAN-KAN-2026-8841',
+            'Details': 'Home loan of ₹45 Lakhs active on this plot.',
           },
         },
         {
-          name: 'Sample 2: Add Court Stay / Injunction',
+          name: 'Sample 2: Clear Loan & Unlock PROP-UP-NOI-002',
           inputs: {
-            'Target Parcel ID': 'PROP-MH-PUN-003',
-            'Encumbrance Kind': 'COURT_STAY',
-            'Sanction Reference': 'HC-BOMBAY-STAY-CIVIL-2024-109',
-            'Claim Description': 'Interim civil court injunction on property mutation pending title partition suit.',
-          },
-        },
-        {
-          name: 'Sample 3: Release Mortgage on PROP-MH-PUN-002',
-          inputs: {
-            'Target Parcel ID': 'PROP-MH-PUN-002',
-            'Current Status': 'ENCUMBERED (SBI Home Loan active)',
-            'Action': 'Switch to Legal Notary -> Scroll to Active Encumbrances -> Click Release Lien',
-            'Expected Result': 'Encumbrance deactivated on-chain, property becomes transferrable again.',
+            'Target Property ID': 'PROP-UP-NOI-002 (Sector 62, Noida)',
+            'Current Status': 'ENCUMBERED (Locked due to active loan)',
+            'Steps': 'Switch account to Divyanshh -> Go to Authority Portal -> Click "Clear Loan & Unlock"',
+            'Expected Result': 'Loan lock is removed and Ayushhh can now transfer the property.',
           },
         },
       ],
@@ -162,25 +143,25 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'owner-transfer',
       tabId: 'owner',
       category: 'owner',
-      title: '4. Property Owner: On-Chain Title Conveyance (Mutation)',
-      description: 'Execute smart contract ownership transfer with 4-point guard assertions. Requires property owner account.',
-      roleNeeded: 'Aarav Sharma - Citizen Owner A (0x7099...79C8)',
+      title: '4. Property Owner (Ayushhh): Transfer Ownership to Buyer',
+      description: 'Transfer a verified, loan-free property to Kartikey (Buyer).',
+      roleNeeded: 'Ayushhh - Owner (0x90F7...b906)',
       presets: [
         {
-          name: 'Sample Positive Transfer (Clean Title)',
+          name: 'Positive Test: Valid Ownership Transfer',
           inputs: {
-            'Select Property': 'PROP-MH-PUN-001 (Plot 42A, Baner Hill Road)',
-            'Buyer / Recipient Address': '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC (Priya Patel)',
-            'Conveyance Deed IPFS URI': 'ipfs://bafybeiconveyancedeed-sale-mutation-2024',
-            'Pre-Flight Security Guards': '1. Caller is Owner: PASS | 2. Verified: PASS | 3. Lien Free: PASS | 4. Valid Recipient: PASS',
+            'Select Property': 'PROP-UP-KAN-001 (Civil Lines, Kanpur)',
+            'Buyer Wallet (Kartikey)': '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65',
+            'Sale Deed Link': 'ipfs://sale-deed-transfer-2026',
+            'Security Checks': '1. Owner: PASS | 2. Verified: PASS | 3. Loan-Free: PASS | 4. Valid Buyer: PASS',
           },
         },
         {
-          name: 'Sample Negative Security Test (Lien Blocked)',
+          name: 'Negative Test: Try Selling a Mortgaged Plot (Blocked)',
           inputs: {
-            'Select Property': 'PROP-MH-PUN-002 (CTS 1089, Shivaji Nagar)',
-            'Attempted Recipient': '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-            'Expected Security Failure': 'Guard #3 fails with "FAIL: Active Lien exists (MORTGAGE)". Smart contract automatically rejects the transfer.',
+            'Select Property': 'PROP-UP-NOI-002 (Sector 62, Noida)',
+            'Buyer Wallet (Kartikey)': '0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65',
+            'Expected Result': 'Check #3 fails ("Active loan lock"). Smart contract blocks the sale.',
           },
         },
       ],
@@ -189,31 +170,17 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'document-hasher',
       tabId: 'hasher',
       category: 'hasher',
-      title: '5. Document Hasher: Cryptographic Integrity & Tamper Test',
-      description: 'Test SHA-256 cryptographic verification of off-chain deed metadata.',
-      roleNeeded: 'Any Account (Public Verification)',
+      title: '5. Document Hasher: SHA-256 Tamper Detection Test',
+      description: 'Check if off-chain property papers match the SHA-256 fingerprint saved on the blockchain.',
+      roleNeeded: 'Any Account',
       presets: [
         {
-          name: 'Original Genuine Deed (Valid Hash Match)',
+          name: 'Tamper Detection Demo Steps',
           inputs: {
-            'Target Parcel': 'PROP-MH-PUN-001',
-            'On-Chain SHA-256': 'a4f8902b1c3e45d67890abcdef1234567890abcdef1234567890abcdef123456',
-            'Expected Result': 'DOCUMENT AUTHENTIC & VERIFIED (Green badge)',
-          },
-        },
-        {
-          name: 'Tampered Deed Simulation',
-          inputs: {
-            'Action': 'Click "Simulate Tampering" button in Document Hasher tab',
-            'Modification': 'Changes areaSqFt from 2400 to 3600 and injects fake owner',
-            'Expected Result': 'Instant hash mismatch -> TAMPERING DETECTED / INVALID DEED (Red alert)',
-          },
-        },
-        {
-          name: 'CLI Verification Command (Terminal / Node.js)',
-          inputs: {
-            'OpenSSL': 'openssl dgst -sha256 property_001.json',
-            'Node.js CLI': 'node -e "console.log(require(\'crypto\').createHash(\'sha256\').update(fs.readFileSync(\'property_001.json\')).digest(\'hex\'))"',
+            'Target Property': 'PROP-UP-KAN-001 (Civil Lines, Kanpur)',
+            'Step 1': 'Open the Document Hasher tab to see the original matching green SHA-256 hash.',
+            'Step 2': 'Change a single number in the JSON text (for example, change areaSqFt from 3600 to 5000).',
+            'Expected Result': 'The hash immediately changes and shows a Red "Tampering Detected" alert.',
           },
         },
       ],
@@ -222,41 +189,17 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
       id: 'public-explorer',
       tabId: 'explorer',
       category: 'explorer',
-      title: '6. Public Title Explorer: Search & Verification Queries',
-      description: 'Sample search terms to test parcel query engine, encumbrance certificates, and audit history.',
+      title: '6. Public Explorer: Search Keywords',
+      description: 'Search terms to quickly find properties and view their past ownership history.',
       roleNeeded: 'Public Access',
       presets: [
         {
           name: 'Quick Search Keywords',
           inputs: {
-            'By Parcel ID': 'PROP-MH-PUN-001  or  PROP-MH-PUN-002  or  PROP-MH-PUN-003',
-            'By Physical Location': 'Baner Hill  or  Shivaji Nagar  or  Viman Nagar',
-            'By Citizen Owner': 'Aarav Sharma  or  Priya Patel',
-            'By Owner Wallet': '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-            'Filter by Status': 'Select "Verified Titles", "Encumbered (Lien Active)", or "Transferred Titles"',
-          },
-        },
-      ],
-    },
-    {
-      id: 'hardhat-simulator',
-      tabId: 'simulator',
-      category: 'simulator',
-      title: '7. Hardhat EVM Test Runner: Unit Test Scenarios',
-      description: '16+ automated Hardhat unit tests asserting smart contract invariants.',
-      roleNeeded: 'Any Account',
-      presets: [
-        {
-          name: 'Core Invariant Test Cases',
-          inputs: {
-            'Test #01': 'Deployment & Role Initialization (Deployer is Registrar)',
-            'Test #02': 'Authorized Parcel Registration with SHA-256 Hash',
-            'Test #03': 'Reject Duplicate Parcel ID Registration (Revert: "Parcel already registered")',
-            'Test #04': 'Surveyor Boundary Verification',
-            'Test #05': 'Legal Notary Lien Attachment',
-            'Test #06': 'Block Title Transfer with Active Encumbrance (Revert: "Property has active encumbrance")',
-            'Test #07': 'Authorized Owner Title Transfer & Historical Mutation Recording',
-            'Test #08': 'Reject Transfer by Non-Owner Caller (Revert: "Caller is not the property owner")',
+            'By Property ID': 'PROP-UP-KAN-001  or  PROP-UP-NOI-002  or  PROP-UP-LKO-004',
+            'By Location': 'Kanpur  or  Noida  or  Rooma  or  Lucknow',
+            'By Owner Name': 'Ayushhh  or  Kartikey',
+            'By Owner Wallet': '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
           },
         },
       ],
@@ -279,10 +222,10 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-[#1a1a1a]">
-                Sample Inputs & Test Scenarios Guide
+                Project Demo & Sample Inputs Guide
               </h2>
               <p className="text-xs text-[#6c757d]">
-                Ready-to-use realistic data, wallet roles, and test cases for every section of the application.
+                Ready-to-use sample inputs, team roles, and test cases for demonstrating the project.
               </p>
             </div>
           </div>
@@ -299,12 +242,11 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
         <div className="px-5 py-2.5 bg-[#f8f9fa] border-b border-[#e9ecef] flex items-center gap-2 overflow-x-auto text-xs">
           <span className="text-[#6c757d] font-bold shrink-0">Filter Section:</span>
           {[
-            { id: 'all', label: 'All Sections' },
-            { id: 'authority', label: 'Authority & Encumbrance' },
+            { id: 'all', label: 'All Steps' },
+            { id: 'authority', label: 'Authority Portal' },
             { id: 'owner', label: 'Owner & Transfer' },
             { id: 'hasher', label: 'Document Hasher' },
-            { id: 'explorer', label: 'Explorer Search' },
-            { id: 'simulator', label: 'Hardhat Tests' },
+            { id: 'explorer', label: 'Public Explorer' },
           ].map(cat => (
             <button
               key={cat.id}
@@ -345,7 +287,7 @@ export const SampleInputsGuideModal: React.FC<SampleInputsGuideModalProps> = ({
                     }}
                     className="flex items-center gap-1 px-3 py-1 rounded-lg bg-[#1a1a1a] hover:bg-[#2d3436] text-white text-xs font-bold transition-colors shadow-xs"
                   >
-                    <span>Open Section</span>
+                    <span>Go to Tab</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>

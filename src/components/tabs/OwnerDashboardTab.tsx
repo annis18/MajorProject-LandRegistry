@@ -1,21 +1,15 @@
 import React, { useState } from 'react';
 import { useBlockchain } from '../../context/BlockchainContext';
-import { Property } from '../../types';
-import { shortenAddress, formatTimestamp } from '../../utils/crypto';
+import { shortenAddress } from '../../utils/crypto';
 import {
   Building2,
   ArrowRightLeft,
   ShieldCheck,
-  ShieldAlert,
   Lock,
-  Unlock,
   CheckCircle2,
   AlertCircle,
-  FileText,
-  User,
   Sparkles,
   ArrowRight,
-  Info,
 } from 'lucide-react';
 
 interface OwnerDashboardProps {
@@ -36,7 +30,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
     p => p.currentOwner.toLowerCase() === currentAccount.address.toLowerCase()
   );
 
-  // Transfer modal / form state
+  // Transfer form state
   const [selectedParcelId, setSelectedParcelId] = useState<string>(myProperties[0]?.parcelId || '');
   const [recipientAddress, setRecipientAddress] = useState<string>(accounts[4]?.address || '');
   const [customDeedURI, setCustomDeedURI] = useState<string>('');
@@ -46,22 +40,25 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
   // Target property object
   const activeParcel = properties.find(p => p.parcelId === selectedParcelId) || myProperties[0];
 
-  // Pre-flight checks
+  // Smart Contract Security Checks
   const isVerified = activeParcel?.verified;
   const hasActiveLien = activeParcel?.encumbrances.some(e => e.active);
   const isCurrentOwner = activeParcel?.currentOwner.toLowerCase() === currentAccount.address.toLowerCase();
-  const isValidRecipient = recipientAddress.startsWith('0x') && recipientAddress.length === 42 && recipientAddress.toLowerCase() !== activeParcel?.currentOwner.toLowerCase();
+  const isValidRecipient =
+    recipientAddress.startsWith('0x') &&
+    recipientAddress.length === 42 &&
+    recipientAddress.toLowerCase() !== activeParcel?.currentOwner.toLowerCase();
   const canTransfer = isVerified && !hasActiveLien && isCurrentOwner && isValidRecipient;
 
-  // Load sample transfer to Priya Patel
+  // Load sample transfer to Kartikey
   const handleLoadSampleTransfer = () => {
     if (myProperties.length > 0) {
       setSelectedParcelId(myProperties[0].parcelId);
     }
-    setRecipientAddress(accounts[4].address); // Priya Patel
-    setCustomDeedURI('ipfs://conveyance-sale-deed-registered-2026');
+    setRecipientAddress(accounts[4].address); // Kartikey
+    setCustomDeedURI('ipfs://sale-deed-transfer-2026');
     setTransferError(null);
-    onNotify('info', 'Sample Transfer Loaded', 'Populated transfer form with Buyer B (Priya Patel).');
+    onNotify('info', 'Sample Transfer Loaded', 'Filled transfer form with Buyer wallet (Kartikey).');
   };
 
   const handleTransferSubmit = async (e: React.FormEvent) => {
@@ -69,12 +66,12 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
     setTransferError(null);
 
     if (!selectedParcelId) {
-      setTransferError('Please select a property parcel to transfer.');
+      setTransferError('Please select a property to transfer.');
       return;
     }
 
     if (!recipientAddress.trim() || !recipientAddress.startsWith('0x')) {
-      setTransferError('Please enter a valid Ethereum address for the new owner.');
+      setTransferError('Please enter a valid wallet address (starting with 0x) for the buyer.');
       return;
     }
 
@@ -87,23 +84,23 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
     setIsTransferring(false);
 
     if (result.success) {
-      onNotify('success', 'Title Transferred', result.message, result.txHash);
+      onNotify('success', 'Ownership Transferred', result.message, result.txHash);
       setCustomDeedURI('');
     } else {
       setTransferError(result.message);
-      onNotify('error', 'Transfer Reverted', result.message);
+      onNotify('error', 'Transfer Blocked', result.message);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Current Identity & Quick Switcher */}
+      {/* Current User & Quick Switcher */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#fff9db] text-[#f59f00] border border-[#ffec99]">
-                CITIZEN OWNER VIEW
+                CITIZEN / OWNER VIEW
               </span>
               <h2 className="text-base font-bold text-[#1a1a1a] tracking-tight">
                 {currentAccount.name}
@@ -118,24 +115,24 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
           <div className="flex items-center gap-2">
             <span className="text-xs text-[#6c757d] font-bold hidden sm:inline">Switch Citizen:</span>
             <button
-              onClick={() => setCurrentAccount(accounts[3])} // Aarav Sharma
+              onClick={() => setCurrentAccount(accounts[3])} // Ayushhh
               className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                 currentAccount.address === accounts[3].address
                   ? 'bg-[#1a1a1a] text-white border-[#1a1a1a] shadow-xs'
                   : 'bg-[#f8f9fa] text-[#495057] hover:text-[#1a1a1a] hover:bg-[#e9ecef] border-[#ced4da]'
               }`}
             >
-              Aarav Sharma (Owner A)
+              Ayushhh (Owner)
             </button>
             <button
-              onClick={() => setCurrentAccount(accounts[4])} // Priya Patel
+              onClick={() => setCurrentAccount(accounts[4])} // Kartikey
               className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                 currentAccount.address === accounts[4].address
                   ? 'bg-[#1a1a1a] text-white border-[#1a1a1a] shadow-xs'
                   : 'bg-[#f8f9fa] text-[#495057] hover:text-[#1a1a1a] hover:bg-[#e9ecef] border-[#ced4da]'
               }`}
             >
-              Priya Patel (Buyer B)
+              Kartikey (Buyer)
             </button>
           </div>
         </div>
@@ -146,19 +143,19 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-bold text-[#1a1a1a] uppercase tracking-wider flex items-center gap-2">
             <Building2 className="w-4 h-4 text-[#0ca678]" />
-            <span>My Registered Titles ({myProperties.length})</span>
+            <span>My Owned Properties ({myProperties.length})</span>
           </h3>
           <span className="text-xs text-[#6c757d] font-medium">
-            Ownership proven by on-chain <code className="text-[#0ca678] font-bold">currentTitle[parcelId].owner</code>
+            Verified on-chain via owner wallet address
           </span>
         </div>
 
         {myProperties.length === 0 ? (
           <div className="bg-white border border-dashed border-[#ced4da] p-8 rounded-xl text-center">
             <Building2 className="w-10 h-10 text-[#adb5bd] mx-auto mb-2" />
-            <h4 className="text-sm font-bold text-[#1a1a1a]">No Properties Owned by This Account</h4>
+            <h4 className="text-sm font-bold text-[#1a1a1a]">No Properties Owned by This Wallet</h4>
             <p className="text-xs text-[#6c757d] mt-1 max-w-md mx-auto">
-              Switch to "Aarav Sharma" or register a new property in the Authority Portal to see assets here.
+              Switch to "Ayushhh (Owner)" or "Kartikey (Buyer)" above, or register a new plot in the Authority Portal.
             </p>
           </div>
         ) : (
@@ -201,7 +198,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                     <div>
                       {hasLien ? (
                         <span className="text-[11px] text-[#e03131] font-bold flex items-center gap-1">
-                          <Lock className="w-3.5 h-3.5" /> Transfer Blocked (Lien)
+                          <Lock className="w-3.5 h-3.5" /> Locked (Active Bank Loan)
                         </span>
                       ) : prop.verified ? (
                         <span className="text-[11px] text-[#0ca678] font-bold flex items-center gap-1">
@@ -209,7 +206,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                         </span>
                       ) : (
                         <span className="text-[11px] text-[#f59f00] font-bold flex items-center gap-1">
-                          <AlertCircle className="w-3.5 h-3.5" /> Pending Verification
+                          <AlertCircle className="w-3.5 h-3.5" /> Waiting for Surveyor Verification
                         </span>
                       )}
                     </div>
@@ -221,7 +218,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                       }}
                       className="text-xs font-bold text-[#1a1a1a] hover:text-[#0ca678] flex items-center gap-1 transition-colors"
                     >
-                      <span>Select to Transfer</span>
+                      <span>Select to Sell / Transfer</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -232,7 +229,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
         )}
       </div>
 
-      {/* SECTION 2: Transfer Title Workflow */}
+      {/* SECTION 2: Transfer Ownership Workflow */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#e9ecef] pb-4 mb-6">
           <div>
@@ -241,11 +238,11 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                 STEP 3
               </span>
               <h3 className="text-base font-bold text-[#1a1a1a] tracking-tight">
-                Initiate Ownership Transfer (Mutation)
+                Transfer Property Ownership (Sell to Buyer)
               </h3>
             </div>
             <p className="text-xs text-[#6c757d] mt-0.5 font-medium">
-              Execute smart contract title conveyance with automated multi-point security validations.
+              Transfer a verified, loan-free property to a new buyer wallet on the blockchain.
             </p>
           </div>
 
@@ -255,7 +252,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#e6fcf5] hover:bg-[#b2f2bb] text-[#0ca678] border border-[#b2f2bb] text-xs font-bold transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>LOAD SAMPLE TRANSFER</span>
+            <span>FILL SAMPLE TRANSFER</span>
           </button>
         </div>
 
@@ -279,10 +276,10 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a]"
                 required
               >
-                <option value="">-- Choose from your parcels --</option>
+                <option value="">-- Choose a property --</option>
                 {properties.map(p => (
                   <option key={p.parcelId} value={p.parcelId}>
-                    {p.parcelId} — {p.propertyNumber} ({p.currentOwnerName})
+                    {p.parcelId} — {p.propertyNumber} (Owner: {p.currentOwnerName})
                   </option>
                 ))}
               </select>
@@ -290,7 +287,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
 
             <div>
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                Buyer / Recipient Wallet Address <span className="text-[#e03131]">*</span>
+                Buyer Wallet Address <span className="text-[#e03131]">*</span>
               </label>
               <div className="flex gap-2">
                 <input
@@ -306,18 +303,18 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                   onClick={() => setRecipientAddress(accounts[4].address)}
                   className="px-2.5 py-2 bg-[#f8f9fa] hover:bg-[#e9ecef] text-[11px] rounded-lg text-[#495057] border border-[#ced4da] font-bold transition-colors"
                 >
-                  Set Priya (Buyer)
+                  Set Kartikey (Buyer)
                 </button>
               </div>
             </div>
 
             <div className="sm:col-span-2">
               <label className="block text-xs font-bold text-[#495057] mb-1">
-                New Conveyance Deed IPFS URI
+                New Sale Deed Document Link (IPFS)
               </label>
               <input
                 type="text"
-                placeholder="ipfs://bafybeiconveyancedeed..."
+                placeholder="ipfs://sale-deed-2026..."
                 value={customDeedURI}
                 onChange={e => setCustomDeedURI(e.target.value)}
                 className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg px-3.5 py-2 text-xs text-[#1a1a1a] focus:bg-white focus:outline-none focus:border-[#1a1a1a] font-mono"
@@ -325,10 +322,10 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
             </div>
           </div>
 
-          {/* Pre-Flight Smart Contract Security Checks Matrix */}
+          {/* Smart Contract Security Checks */}
           <div className="p-4 bg-[#f8f9fa] rounded-xl border border-[#e9ecef]">
             <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider mb-3">
-              Pre-Flight Smart Contract Guard Assertions
+              Smart Contract Security Checks (Before Transfer)
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -339,7 +336,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                   <AlertCircle className="w-4 h-4 text-[#e03131] shrink-0" />
                 )}
                 <span className={isCurrentOwner ? 'text-[#495057] font-medium' : 'text-[#e03131] font-bold'}>
-                  1. Caller is current active owner ({isCurrentOwner ? 'PASS' : 'FAIL: Not owner'})
+                  1. Current user is the owner ({isCurrentOwner ? 'PASS' : 'FAIL: Not the owner'})
                 </span>
               </div>
 
@@ -350,7 +347,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                   <AlertCircle className="w-4 h-4 text-[#f59f00] shrink-0" />
                 )}
                 <span className={isVerified ? 'text-[#495057] font-medium' : 'text-[#f59f00] font-bold'}>
-                  2. Property is officially verified ({isVerified ? 'PASS' : 'FAIL: Unverified'})
+                  2. Property is verified by Surveyor ({isVerified ? 'PASS' : 'FAIL: Not verified yet'})
                 </span>
               </div>
 
@@ -361,7 +358,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                   <Lock className="w-4 h-4 text-[#e03131] shrink-0" />
                 )}
                 <span className={!hasActiveLien ? 'text-[#495057] font-medium' : 'text-[#e03131] font-bold'}>
-                  3. Encumbrance & Mortgage free ({!hasActiveLien ? 'PASS' : 'FAIL: Active Lien exists'})
+                  3. No active bank loan or lock ({!hasActiveLien ? 'PASS' : 'FAIL: Active loan lock'})
                 </span>
               </div>
 
@@ -372,7 +369,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
                   <AlertCircle className="w-4 h-4 text-[#e03131] shrink-0" />
                 )}
                 <span className={isValidRecipient ? 'text-[#495057] font-medium' : 'text-[#e03131] font-bold'}>
-                  4. Valid new owner wallet ({isValidRecipient ? 'PASS' : 'FAIL: Invalid/same address'})
+                  4. Valid buyer wallet address ({isValidRecipient ? 'PASS' : 'FAIL: Invalid or same wallet'})
                 </span>
               </div>
             </div>
@@ -381,9 +378,9 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <div className="text-xs text-[#6c757d]">
               {canTransfer ? (
-                <span className="text-[#0ca678] font-bold">✓ All guard conditions satisfied. Ready for on-chain execution.</span>
+                <span className="text-[#0ca678] font-bold">✓ All security checks passed. Ready to transfer ownership.</span>
               ) : (
-                <span className="text-[#e03131] font-medium">✗ Fix the highlighted failed security check(s) above before submitting.</span>
+                <span className="text-[#e03131] font-medium">✗ Please fix the failed check(s) above before transferring.</span>
               )}
             </div>
 
@@ -393,7 +390,7 @@ export const OwnerDashboardTab: React.FC<OwnerDashboardProps> = ({ onNotify }) =
               className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[#1a1a1a] hover:bg-[#2d3436] text-white text-xs font-bold transition-all shadow-xs disabled:opacity-50"
             >
               <ArrowRightLeft className="w-4 h-4" />
-              <span>{isTransferring ? 'Executing Mutation...' : 'EXECUTE ON-CHAIN TRANSFER'}</span>
+              <span>{isTransferring ? 'Transferring...' : 'TRANSFER OWNERSHIP ON BLOCKCHAIN'}</span>
             </button>
           </div>
         </form>
