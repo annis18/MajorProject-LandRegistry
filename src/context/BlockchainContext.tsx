@@ -15,7 +15,6 @@ interface BlockchainContextType {
   metaMaskAddress: string | null;
   connectMetaMask: () => Promise<void>;
   
-  // --- NEW WEB3 STATES ---
   liveContract: any;
   setLiveContract: React.Dispatch<any>;
   
@@ -61,15 +60,13 @@ interface BlockchainContextType {
 }
 
 const BlockchainContext = createContext<BlockchainContextType | undefined>(undefined);
-const STORAGE_KEY = 'LANDCHAIN_BLOCKCHAIN_DATA_V1';
+const STORAGE_KEY = 'LANDCHAIN_BLOCKCHAIN_DATA_V2';
 
 export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [accounts] = useState<UserAccount[]>(INITIAL_ACCOUNTS);
   const [currentAccount, setCurrentAccount] = useState<UserAccount>(INITIAL_ACCOUNTS[0]);
   const [isMetaMaskConnected, setIsMetaMaskConnected] = useState(false);
   const [metaMaskAddress, setMetaMaskAddress] = useState<string | null>(null);
-  
-  // --- NEW WEB3 INSTANCE HOLDER ---
   const [liveContract, setLiveContract] = useState<any>(null);
 
   const [properties, setProperties] = useState<Property[]>(() => {
@@ -115,13 +112,13 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
         blockNumber: 101,
         timestamp: 1723500000,
         from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-        fromName: 'District Land Registrar',
+        fromName: 'Animesh (Registrar)',
         toContract: CONTRACT_ADDRESS,
         method: 'registerParcel(bytes32,string,string,address)',
         status: 'CONFIRMED',
         gasUsed: 145220,
-        eventEmitted: 'ParcelRegistered(PROP-MH-PUN-001)',
-        details: 'Genesis registration of Baner Commercial Plot 45/2B',
+        eventEmitted: 'ParcelRegistered(PROP-UP-KAN-001)',
+        details: 'Genesis registration of Kanpur Civil Lines Plot 45/2B',
       },
     ];
   });
@@ -179,27 +176,18 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
     return { txHash, blockNum: newBlockNumber };
   };
 
-  // 1. REGISTER PROPERTY (HYBRID WEB3 ROUTING)
   const registerProperty = async (params: any): Promise<{ success: boolean; message: string; txHash?: string }> => {
     const cleanId = params.parcelId.trim().toUpperCase();
     
-    // IF LIVE WEB3 IS CONNECTED -> ROUTE TO HARDHAT NODE FIRST
     if (liveContract) {
       try {
-        const tx = await liveContract.registerProperty(
-          cleanId,
-          params.location,
-          params.areaSqFt,
-          params.initialOwnerAddress,
-          params.documentHash
-        );
-        await tx.wait(); // Pauses UI until Hardhat mines the block
+        const tx = await liveContract.registerProperty(cleanId, params.location, params.areaSqFt, params.initialOwnerAddress, params.documentHash);
+        await tx.wait();
       } catch (error: any) {
         return { success: false, message: `Web3 Contract Revert: ${error.message}` };
       }
     }
 
-    // After successful Web3 transaction (or if in Demo Mode), update React UI State
     const now = Math.floor(Date.now() / 1000);
     const { txHash } = recordTransaction({
       method: `registerParcel(${cleanId}, ${params.propertyNumber}, ${params.initialOwnerAddress.slice(0, 8)}...)`,
@@ -213,16 +201,16 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
       propertyNumber: params.propertyNumber || `CTS-${cleanId}`,
       surveyNumber: params.surveyNumber || 'Survey 101/A',
       location: params.location,
-      state: params.state || 'Maharashtra',
-      district: params.district || 'Pune',
+      state: params.state || 'Uttar Pradesh',
+      district: params.district || 'Kanpur Nagar',
       areaSqFt: Number(params.areaSqFt),
       propertyType: params.propertyType,
-      geoHash: params.geoHash || 'tek3v290',
-      coordinates: { lat: 18.5204 + (Math.random() - 0.5) * 0.1, lng: 73.8567 + (Math.random() - 0.5) * 0.1 },
+      geoHash: params.geoHash || 'tu4q9z22',
+      coordinates: { lat: 26.4499 + (Math.random() - 0.5) * 0.1, lng: 80.3319 + (Math.random() - 0.5) * 0.1 },
       metadataURI: params.metadataURI || 'ipfs://bafybeidemo' + Date.now(),
       documentHash: params.documentHash,
       currentOwner: params.initialOwnerAddress,
-      currentOwnerName: 'Registered Citizen',
+      currentOwnerName: accounts.find(a => a.address.toLowerCase() === params.initialOwnerAddress.toLowerCase())?.name || 'Registered Citizen',
       status: 'REGISTERED',
       verified: false,
       registeredAt: now,
@@ -230,7 +218,7 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
       marketValueEth: params.marketValueEth || 15.0,
       encumbrances: [],
       titleHistory: [{
-        owner: params.initialOwnerAddress, ownerName: 'Registered Citizen', registeredAt: now,
+        owner: params.initialOwnerAddress, ownerName: accounts.find(a => a.address.toLowerCase() === params.initialOwnerAddress.toLowerCase())?.name || 'Registered Citizen', registeredAt: now,
         active: true, deedURI: params.deedURI || 'ipfs://initial-deed', txHash,
       }],
     };
@@ -244,23 +232,63 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
     if (propIndex === -1) return { success: false, message: 'Property missing.' };
     const prop = properties[propIndex];
     const now = Math.floor(Date.now() / 1000);
-    const { txHash } = recordTransaction({ method: `verifyProperty(${parcelId})`, details: `Verified`, eventEmitted: `Verified`, gasUsed: 38500 });
+    const { txHash } = recordTransaction({ method: `verifyProperty(${parcelId})`, details: `Verified physical boundaries by Surveyor`, eventEmitted: `PropertyVerified(${parcelId})`, gasUsed: 38500 });
     const updated = [...properties];
     updated[propIndex] = { ...prop, verified: true, verifiedBy: currentAccount.address, verifiedAt: now, status: 'VERIFIED' };
     setProperties(updated);
-    return { success: true, message: `Verified!`, txHash };
+    return { success: true, message: `Plot bounds officially verified!`, txHash };
   };
 
   const addEncumbrance = async (params: any): Promise<{ success: boolean; message: string; txHash?: string }> => {
-    return { success: true, message: "Encumbrance added." }; // Truncated for brevity
+    const propIndex = properties.findIndex(p => p.parcelId === params.parcelId);
+    if (propIndex === -1) return { success: false, message: 'Property missing.' };
+    const prop = properties[propIndex];
+    const newEncId = 'ENC-' + Date.now();
+    const { txHash } = recordTransaction({ method: `addEncumbrance(${params.parcelId}, ${params.kind})`, details: `Attached ${params.kind} to block transfers`, eventEmitted: `EncumbranceAdded(${params.parcelId})`, gasUsed: 62400 });
+    
+    const updated = [...properties];
+    updated[propIndex] = {
+      ...prop,
+      status: 'ENCUMBERED',
+      encumbrances: [...prop.encumbrances, { id: newEncId, kind: params.kind, ref: params.ref, details: params.details, active: true, createdAt: Math.floor(Date.now() / 1000), by: currentAccount.address, byName: currentAccount.name }]
+    };
+    setProperties(updated);
+    return { success: true, message: "Bank loan lock added successfully.", txHash };
   };
 
   const releaseEncumbrance = async (parcelId: string, encumbranceId: string): Promise<{ success: boolean; message: string; txHash?: string }> => {
-    return { success: true, message: "Encumbrance released." }; // Truncated for brevity
+    const propIndex = properties.findIndex(p => p.parcelId === parcelId);
+    if (propIndex === -1) return { success: false, message: 'Property missing.' };
+    const prop = properties[propIndex];
+    
+    const { txHash } = recordTransaction({ method: `releaseEncumbrance(${parcelId})`, details: `Cleared loan/lock ${encumbranceId}`, eventEmitted: `EncumbranceReleased(${parcelId})`, gasUsed: 42100 });
+    
+    const updated = [...properties];
+    const updatedEncs = prop.encumbrances.map(e => e.id === encumbranceId ? { ...e, active: false } : e);
+    const hasActive = updatedEncs.some(e => e.active);
+    updated[propIndex] = { ...prop, status: hasActive ? 'ENCUMBERED' : 'VERIFIED', encumbrances: updatedEncs };
+    setProperties(updated);
+    return { success: true, message: "Loan cleared and plot unlocked.", txHash };
   };
 
   const transferOwnership = async (params: any): Promise<{ success: boolean; message: string; txHash?: string }> => {
-    return { success: true, message: "Title transferred." }; // Truncated for brevity
+    const propIndex = properties.findIndex(p => p.parcelId === params.parcelId);
+    if (propIndex === -1) return { success: false, message: 'Property missing.' };
+    const prop = properties[propIndex];
+    
+    if (prop.encumbrances.some(e => e.active)) return { success: false, message: 'Cannot transfer a property with an active bank loan.' };
+    
+    const newOwnerName = accounts.find(a => a.address.toLowerCase() === params.newOwnerAddress.toLowerCase())?.name || 'New Buyer';
+    const now = Math.floor(Date.now() / 1000);
+    const { txHash } = recordTransaction({ method: `transferTitle(${params.parcelId}, ${params.newOwnerAddress.slice(0, 8)}...)`, details: `Transferred ownership to ${newOwnerName}`, eventEmitted: `TitleTransferred(${params.parcelId})`, gasUsed: 125000 });
+    
+    const updated = [...properties];
+    const newHistory = prop.titleHistory.map(t => ({ ...t, active: false }));
+    newHistory.push({ owner: params.newOwnerAddress, ownerName: newOwnerName, registeredAt: now, active: true, deedURI: params.newDeedURI || 'ipfs://new-conveyance', txHash });
+    
+    updated[propIndex] = { ...prop, status: 'TRANSFERRED', currentOwner: params.newOwnerAddress, currentOwnerName: newOwnerName, lastTransferredAt: now, titleHistory: newHistory };
+    setProperties(updated);
+    return { success: true, message: `Ownership successfully transferred to ${newOwnerName}!`, txHash };
   };
 
   const resetDemoState = () => {
@@ -272,18 +300,18 @@ export const BlockchainProvider: React.FC<{ children: ReactNode }> = ({ children
 
   const loadSamplePropertyData = () => {
     return {
-      parcelId: 'PROP-MH-PUN-' + Math.floor(100 + Math.random() * 900),
-      propertyNumber: 'CTS-Shivajinagar-Plot-' + Math.floor(10 + Math.random() * 90),
-      surveyNumber: 'Survey ' + Math.floor(10 + Math.random() * 90) + '/3A',
-      location: 'FC Road, Shivajinagar, Pune, Maharashtra 411005',
-      state: 'Maharashtra',
-      district: 'Pune',
+      parcelId: 'PROP-UP-KAN-' + Math.floor(100 + Math.random() * 900),
+      propertyNumber: 'Plot-Swaroop-' + Math.floor(10 + Math.random() * 90),
+      surveyNumber: 'Survey ' + Math.floor(10 + Math.random() * 90) + '/Block B',
+      location: 'Swaroop Nagar, Kanpur, Uttar Pradesh 208002',
+      state: 'Uttar Pradesh',
+      district: 'Kanpur Nagar',
       areaSqFt: 4200,
       propertyType: 'COMMERCIAL' as const,
-      geoHash: 'tek3v' + Math.floor(100 + Math.random() * 900),
-      metadataURI: 'ipfs://bafybeishivajinagarplotcadastraldoc' + Date.now(),
+      geoHash: 'tu4q9z' + Math.floor(10 + Math.random() * 90),
+      metadataURI: 'ipfs://bafybeiswaroopnagarplotcadastraldoc' + Date.now(),
       documentHash: '0x' + Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-      initialOwnerAddress: INITIAL_ACCOUNTS[3].address,
+      initialOwnerAddress: INITIAL_ACCOUNTS[3].address, // Ayushhh
       deedURI: 'ipfs://conveyancedeed-official-allotment-2026',
       marketValueEth: 24.5,
     };

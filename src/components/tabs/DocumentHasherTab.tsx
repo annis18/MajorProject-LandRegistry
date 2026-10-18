@@ -3,23 +3,20 @@ import { useBlockchain } from '../../context/BlockchainContext';
 import { DUMMY_PROPERTY_001_JSON } from '../../data/mockData';
 import { generateSha256 } from '../../utils/crypto';
 import {
-  FileCheck2,
   Fingerprint,
   ShieldCheck,
   ShieldAlert,
   RotateCcw,
-  Sparkles,
   AlertTriangle,
   Copy,
   Check,
   Terminal,
   FileCode2,
-  HelpCircle,
 } from 'lucide-react';
 
 export const DocumentHasherTab: React.FC = () => {
   const { properties } = useBlockchain();
-  const targetProperty = properties.find(p => p.parcelId === 'PROP-MH-PUN-001') || properties[0];
+  const targetProperty = properties.find(p => p.parcelId === 'PROP-UP-KAN-001') || properties[0];
 
   const [documentContent, setDocumentContent] = useState<string>(
     JSON.stringify(DUMMY_PROPERTY_001_JSON, null, 2)
@@ -46,8 +43,8 @@ export const DocumentHasherTab: React.FC = () => {
   const handleTamperSimulation = () => {
     try {
       const parsed = JSON.parse(documentContent);
-      parsed.surveyNumber = 'Survey 45, Hissa 99 (TAMPERED BY FRAUDULENT SELLER)';
-      parsed.cadastralBoundaries.north = 'CTS Plot 99/99 (UNAUTHORIZED EXTENSION)';
+      parsed.surveyNumber = 'Survey 45, Block B (TAMPERED BY FRAUDULENT SELLER)';
+      parsed.cadastralBoundaries.north = 'Plot 45/1 (UNAUTHORIZED EXTENSION)';
       setDocumentContent(JSON.stringify(parsed, null, 2));
     } catch {
       setDocumentContent(prev => prev + ' // TAMPERED');
@@ -66,7 +63,7 @@ export const DocumentHasherTab: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Educational Banner: Why Off-Chain Document Storage? (PDF Section 15) */}
+      {/* Educational Banner */}
       <div className="bg-white border border-[#e9ecef] rounded-xl p-6 shadow-xs">
         <div className="flex items-start gap-3">
           <Fingerprint className="w-5 h-5 text-[#0ca678] shrink-0 mt-0.5" />
@@ -196,7 +193,7 @@ export const DocumentHasherTab: React.FC = () => {
             </div>
           </div>
 
-          {/* Terminal / CLI Verification Commands (PDF Section 15) */}
+          {/* Terminal / CLI Verification Commands */}
           <div className="bg-white border border-[#e9ecef] rounded-xl p-5 shadow-xs">
             <h4 className="text-xs font-bold text-[#1a1a1a] uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Terminal className="w-4 h-4 text-[#0ca678]" />

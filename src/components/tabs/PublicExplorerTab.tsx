@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { useBlockchain } from '../../context/BlockchainContext';
 import { Property, PropertyStatus } from '../../types';
-import { shortenAddress, shortenHash, formatTimestamp } from '../../utils/crypto';
+import { shortenAddress, formatTimestamp } from '../../utils/crypto';
 import {
   Search,
   Building,
   ShieldCheck,
-  ShieldAlert,
   Clock,
   History,
   FileText,
   MapPin,
-  Maximize2,
-  ExternalLink,
   Lock,
   Unlock,
   CheckCircle2,
   ArrowRight,
-  Filter,
   Copy,
   Check,
-  AlertTriangle,
 } from 'lucide-react';
 
 export const PublicExplorerTab: React.FC = () => {
@@ -123,7 +118,7 @@ export const PublicExplorerTab: React.FC = () => {
             <Search className="w-4 h-4 text-[#adb5bd] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by Parcel ID, Survey No, Location, Owner..."
+              placeholder="Search by Property ID, Survey No, Location, Owner..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full bg-[#f8f9fa] border border-[#ced4da] rounded-lg pl-10 pr-4 py-2 text-xs text-[#1a1a1a] placeholder-[#adb5bd] focus:bg-white focus:outline-none focus:border-[#1a1a1a] transition-colors"
@@ -149,13 +144,13 @@ export const PublicExplorerTab: React.FC = () => {
 
         {/* Quick Sample Search Tags */}
         <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[#f1f3f5] text-[11px]">
-          <span className="text-[#6c757d] font-bold mr-1">Sample Search Inputs:</span>
+          <span className="text-[#6c757d] font-bold mr-1">Sample Searches:</span>
           {[
-            { label: 'PROP-MH-PUN-001', val: 'PROP-MH-PUN-001' },
-            { label: 'Baner Hill', val: 'Baner Hill' },
-            { label: 'Aarav Sharma', val: 'Aarav Sharma' },
-            { label: 'Priya Patel', val: 'Priya Patel' },
-            { label: 'Shivaji Nagar', val: 'Shivaji Nagar' },
+            { label: 'PROP-UP-KAN-001', val: 'PROP-UP-KAN-001' },
+            { label: 'Civil Lines', val: 'Civil Lines' },
+            { label: 'Ayushhh', val: 'Ayushhh' },
+            { label: 'Kartikey', val: 'Kartikey' },
+            { label: 'Noida', val: 'Noida' },
           ].map(tag => (
             <button
               key={tag.label}
@@ -189,72 +184,66 @@ export const PublicExplorerTab: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProperties.map(prop => {
-            const hasActiveLien = prop.encumbrances.some(e => e.active);
-            return (
-              <div
-                key={prop.parcelId}
-                className="bg-white border border-[#e9ecef] hover:border-[#ced4da] rounded-xl p-5 flex flex-col justify-between transition-all shadow-xs group"
-              >
-                <div>
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div>
-                      <span className="text-[11px] font-mono font-bold text-[#0ca678] bg-[#e6fcf5] px-2 py-0.5 rounded border border-[#b2f2bb]">
-                        {prop.parcelId}
-                      </span>
-                      <h3 className="text-base font-bold text-[#1a1a1a] mt-1.5 group-hover:text-[#0ca678] transition-colors">
-                        {prop.propertyNumber}
-                      </h3>
-                      <p className="text-xs text-[#6c757d] font-medium">{prop.surveyNumber}</p>
-                    </div>
+          {filteredProperties.map(prop => (
+            <div
+              key={prop.parcelId}
+              className="bg-white border border-[#e9ecef] hover:border-[#ced4da] rounded-xl p-5 flex flex-col justify-between transition-all shadow-xs group"
+            >
+              <div>
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div>
+                    <span className="text-[11px] font-mono font-bold text-[#0ca678] bg-[#e6fcf5] px-2 py-0.5 rounded border border-[#b2f2bb]">
+                      {prop.parcelId}
+                    </span>
+                    <h3 className="text-base font-bold text-[#1a1a1a] mt-1.5 group-hover:text-[#0ca678] transition-colors">
+                      {prop.propertyNumber}
+                    </h3>
+                    <p className="text-xs text-[#6c757d] font-medium">{prop.surveyNumber}</p>
+                  </div>
 
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#f1f3f5] text-[#495057] border border-[#e9ecef]">
-                      {prop.propertyType}
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-[#f1f3f5] text-[#495057] border border-[#e9ecef]">
+                    {prop.propertyType}
+                  </span>
+                </div>
+
+                <div className="space-y-2 text-xs py-3 border-y border-[#f1f3f5]">
+                  <div className="flex items-start gap-1.5 text-[#495057]">
+                    <MapPin className="w-3.5 h-3.5 text-[#adb5bd] shrink-0 mt-0.5" />
+                    <span className="line-clamp-1 font-medium">{prop.location}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[#6c757d]">
+                    <span>Area:</span>
+                    <span className="font-bold text-[#1a1a1a]">{prop.areaSqFt.toLocaleString()} sq.ft.</span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[#6c757d]">
+                    <span>Current Owner:</span>
+                    <span className="font-bold text-[#1a1a1a] truncate max-w-[150px]" title={prop.currentOwner}>
+                      {prop.currentOwnerName}
                     </span>
                   </div>
 
-                  {/* Location & Status */}
-                  <div className="space-y-2 text-xs py-3 border-y border-[#f1f3f5]">
-                    <div className="flex items-start gap-1.5 text-[#495057]">
-                      <MapPin className="w-3.5 h-3.5 text-[#adb5bd] shrink-0 mt-0.5" />
-                      <span className="line-clamp-1 font-medium">{prop.location}</span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[#6c757d]">
-                      <span>Area:</span>
-                      <span className="font-bold text-[#1a1a1a]">{prop.areaSqFt.toLocaleString()} sq.ft.</span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[#6c757d]">
-                      <span>Current Owner:</span>
-                      <span className="font-bold text-[#1a1a1a] truncate max-w-[150px]" title={prop.currentOwner}>
-                        {prop.currentOwnerName}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[#6c757d] font-mono text-[11px]">
-                      <span>Owner Wallet:</span>
-                      <span className="text-[#495057]">{shortenAddress(prop.currentOwner)}</span>
-                    </div>
+                  <div className="flex items-center justify-between text-[#6c757d] font-mono text-[11px]">
+                    <span>Owner Wallet:</span>
+                    <span className="text-[#495057]">{shortenAddress(prop.currentOwner)}</span>
                   </div>
                 </div>
-
-                {/* Card Footer */}
-                <div className="mt-4 pt-2 flex items-center justify-between">
-                  <div>{getStatusBadge(prop.status, prop.verified, prop.encumbrances)}</div>
-
-                  <button
-                    onClick={() => setSelectedProperty(prop)}
-                    className="flex items-center gap-1 text-xs font-bold text-[#1a1a1a] hover:text-[#0ca678] transition-colors"
-                  >
-                    <span>View Provenance</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
               </div>
-            );
-          })}
+
+              <div className="mt-4 pt-2 flex items-center justify-between">
+                <div>{getStatusBadge(prop.status, prop.verified, prop.encumbrances)}</div>
+
+                <button
+                  onClick={() => setSelectedProperty(prop)}
+                  className="flex items-center gap-1 text-xs font-bold text-[#1a1a1a] hover:text-[#0ca678] transition-colors"
+                >
+                  <span>View Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -262,7 +251,6 @@ export const PublicExplorerTab: React.FC = () => {
       {selectedProperty && (
         <div className="fixed inset-0 z-50 bg-[#1a1a1a]/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white border border-[#e9ecef] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 relative">
-            {/* Modal Header */}
             <div className="flex items-start justify-between border-b border-[#e9ecef] pb-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -290,7 +278,6 @@ export const PublicExplorerTab: React.FC = () => {
               </button>
             </div>
 
-            {/* Property Overview Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-5 p-4 bg-[#f8f9fa] rounded-xl border border-[#e9ecef] text-xs">
               <div>
                 <span className="text-[#6c757d] block font-medium">Survey Number</span>
@@ -318,7 +305,6 @@ export const PublicExplorerTab: React.FC = () => {
               </div>
             </div>
 
-            {/* Current Owner Box */}
             <div className="p-4 rounded-xl bg-[#f8f9fa] border border-[#e9ecef] mb-5">
               <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider mb-2">
                 Current Legal Title Holder
@@ -349,7 +335,6 @@ export const PublicExplorerTab: React.FC = () => {
               </div>
             </div>
 
-            {/* Document Hash & Integrity Section */}
             <div className="p-4 rounded-xl bg-[#f8f9fa] border border-[#e9ecef] mb-5">
               <div className="flex items-center justify-between mb-2">
                 <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider flex items-center gap-1.5">
@@ -378,7 +363,6 @@ export const PublicExplorerTab: React.FC = () => {
               </p>
             </div>
 
-            {/* Encumbrances / Liens */}
             <div className="mb-5">
               <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Lock className="w-3.5 h-3.5 text-[#e03131]" />
@@ -388,7 +372,7 @@ export const PublicExplorerTab: React.FC = () => {
               {selectedProperty.encumbrances.length === 0 ? (
                 <div className="p-3.5 rounded-xl bg-[#e6fcf5] border border-[#b2f2bb] text-[#0ca678] text-xs flex items-center gap-2 font-medium">
                   <CheckCircle2 className="w-4 h-4 text-[#0ca678] shrink-0" />
-                  <span>No active encumbrances or court stays recorded. Property is free for transfer.</span>
+                  <span>No active bank loans or court stays recorded. Property is free for transfer.</span>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -418,11 +402,10 @@ export const PublicExplorerTab: React.FC = () => {
               )}
             </div>
 
-            {/* Title Provenance & History Trail */}
             <div>
               <h4 className="text-xs font-bold text-[#6c757d] uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <History className="w-3.5 h-3.5 text-[#1971c2]" />
-                <span>On-Chain Title Provenance & Mutation Trail ({selectedProperty.titleHistory.length} Titles)</span>
+                <span>On-Chain Title Provenance & Ownership Trail ({selectedProperty.titleHistory.length} Titles)</span>
               </h4>
 
               <div className="space-y-3 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#dee2e6]">
@@ -437,17 +420,17 @@ export const PublicExplorerTab: React.FC = () => {
                     <div className="flex-1 bg-[#f8f9fa] p-3 rounded-xl border border-[#e9ecef] text-xs">
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-[#1a1a1a]">
-                          {i === 0 ? 'Genesis Allotment' : `Mutation #${i}`} — {title.ownerName}
+                          {i === 0 ? 'Initial State Allotment' : `Transfer #${i}`} — {title.ownerName}
                         </span>
                         <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${title.active ? 'bg-[#e6fcf5] text-[#0ca678] border border-[#b2f2bb]' : 'bg-[#e9ecef] text-[#6c757d]'}`}>
-                          {title.active ? 'ACTIVE OWNER' : 'HISTORICAL PREDECESSOR'}
+                          {title.active ? 'ACTIVE OWNER' : 'PREVIOUS OWNER'}
                         </span>
                       </div>
 
                       <div className="mt-2 space-y-1 font-mono text-[11px] text-[#6c757d]">
-                        <p>Owner Address: <span className="text-[#1a1a1a] font-medium">{title.owner}</span></p>
+                        <p>Owner Wallet: <span className="text-[#1a1a1a] font-medium">{title.owner}</span></p>
                         <p>Timestamp: <span className="text-[#495057]">{formatTimestamp(title.registeredAt)}</span></p>
-                        <p>Deed Reference: <span className="text-[#1971c2] font-semibold">{title.deedURI}</span></p>
+                        <p>Deed Link (IPFS): <span className="text-[#1971c2] font-semibold">{title.deedURI}</span></p>
                         <p className="text-[#adb5bd]">Tx Hash: {title.txHash}</p>
                       </div>
                     </div>
@@ -456,13 +439,12 @@ export const PublicExplorerTab: React.FC = () => {
               </div>
             </div>
 
-            {/* Modal Actions */}
             <div className="mt-6 pt-4 border-t border-[#e9ecef] flex justify-end">
               <button
                 onClick={() => setSelectedProperty(null)}
                 className="px-4 py-2 rounded-lg bg-[#1a1a1a] hover:bg-[#2d3436] text-white text-xs font-bold transition-colors shadow-xs"
               >
-                Close Inspector
+                Close Details
               </button>
             </div>
           </div>
